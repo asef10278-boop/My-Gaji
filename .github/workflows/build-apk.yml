@@ -1,4 +1,4 @@
-name: Build Hitung Gajiku
+name: Build My Dompet APK
 
 on:
   workflow_dispatch:
@@ -11,10 +11,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Ekstrak proyek baru
+      - name: Extract My Dompet
         run: |
-          unzip -q Hitung_Gajiku_Dengan_Logo.zip -d project
-          cp -a project/app project/build.gradle.kts project/settings.gradle.kts project/gradle.properties .
+          unzip -q My_Dompet_Dengan_Logo.zip -d project
+          ROOT=$(find project -type f -name settings.gradle.kts -printf '%h\n' | head -n 1)
+          if [ -z "$ROOT" ]; then
+            ROOT=$(find project -type f -name settings.gradle -printf '%h\n' | head -n 1)
+          fi
+          cp -a "$ROOT"/. .
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -33,5 +37,5 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: Hitung-Gajiku-APK
+          name: My-Dompet-APK
           path: app/build/outputs/apk/debug/app-debug.apk
