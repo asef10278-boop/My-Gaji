@@ -6,46 +6,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Ekstrak proyek
+      - name: Ekstrak proyek baru
         run: |
-          unzip Hitung_Gajiku_Siap_Build_APK.zip -d project
-          cp -r project/. .
+          unzip -q Hitung_Gajiku_Dengan_Logo.zip -d project
+          cp -a project/app project/build.gradle.kts project/settings.gradle.kts project/gradle.properties .
 
-      - uses: actions/setup-java@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - uses: gradle/actions/setup-gradle@v4
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-
-      - name: Fix JVM target
-        run: |
-          python3 - <<'PY'
-          p = 'app/build.gradle.kts'
-          s = open(p).read()
-          s = s.replace(
-              '    buildFeatures { compose = true }',
-              '''    compileOptions {
-                  sourceCompatibility = JavaVersion.VERSION_17
-                  targetCompatibility = JavaVersion.VERSION_17
-              }
-              kotlinOptions {
-                  jvmTarget = "17"
-              }
-              buildFeatures { compose = true }'''
-          )
-          open(p, 'w').write(s)
-          PY
 
       - name: Build APK
         run: gradle assembleDebug
 
-      - name: Simpan APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Hitung-Gajiku-APK
