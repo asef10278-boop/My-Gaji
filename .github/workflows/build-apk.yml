@@ -13,7 +13,7 @@ jobs:
 
       - name: Extract My Dompet
         run: |
-          unzip -q My_Dompet_Dengan_Logo.zip -d project
+          unzip -q My_Dompet_Anime_Style.zip -d project
           ROOT=$(find project -type f -name settings.gradle.kts -printf '%h\n' | head -n 1)
           if [ -z "$ROOT" ]; then
             ROOT=$(find project -type f -name settings.gradle -printf '%h\n' | head -n 1)
